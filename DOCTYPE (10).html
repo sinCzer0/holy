@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Imposter Party – Browser Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #05030f;
+      --fg: #f5f3ff;
+      --accent: #ff6b4a;
+      --accent-soft: #ffb85c;
+      --card: rgba(12, 10, 30, 0.9);
+      --muted: #8d8aa8;
+      --danger: #ff3366;
+      --success: #34d399;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.55);
+      --blur: 22px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.25s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      color: var(--fg);
+      background: radial-gradient(circle at 10% 0%, #2d1b69 0, transparent 55%),
+                  radial-gradient(circle at 90% 100%, #ff4b4b 0, transparent 55%),
+                  radial-gradient(circle at 10% 100%, #00f5a0 0, transparent 55%),
+                  #05030f;
+      font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      overflow-x: hidden;
+    }
+
+    /* Subtle animated grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -50px;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+      animation: grain 14s steps(4) infinite;
+      z-index: -1;
+    }
+
+    @keyframes grain {
+      0%, 100% { transform: translate3d(0,0,0); }
+      25% { transform: translate3d(-15px,-8px,0); }
+      50% { transform: translate3d(9px,12px,0); }
+      75% { transform: translate3d(-5px,6px,0); }
+    }
+
+    .app-shell {
+      width: min(960px, 100%);
+      max-height: 100vh;
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12), transparent 55%),
+                  radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.08), transparent 55%),
+                  rgba(5, 3, 20, 0.9);
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(var(--blur));
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.1fr);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    @media (max-width: 780px) {
+      .app-shell {
+        display: block;
+        max-height: none;
+      }
+    }
+
+    .app-main {
+      padding: 24px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .app-aside {
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.15), transparent 55%),
+                  linear-gradient(145deg, rgba(32, 24, 84, 0.9), rgba(7, 3, 25, 0.98));
+      padding: 22px 22px 18px;
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    @media (max-width: 780px) {
+      .app-aside {
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    header.app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 180deg, #ff6b4a, #ffb85c, #00f5a0, #5b8dff, #ff6b4a);
+      padding: 2px;
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 10%, rgba(255,255,255,0.6), transparent 45%),
+                  radial-gradient(circle at 70% 80%, rgba(255,107,74,0.5), transparent 55%),
+                  #05030f;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-size: clamp(1.35rem, 2.3vw, 1.65rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-text span {
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, var(--accent-soft), var(--accent));
+      box-shadow: 0 0 0 4px rgba(255, 107, 74, 0.15);
+    }
+
+    /* SCREEN CONTAINERS */
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 4px;
+    }
+    .screen.active {
+      display: flex;
+    }
+
+    .card-panel {
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.04), transparent 60%),
+                  linear-gradient(145deg, rgba(17, 13, 52, 0.96), rgba(7, 3, 25, 0.96));
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 14px 32px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.12), transparent 55%);
+      mix-blend-mode: soft-light;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .card-header span.sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    label {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .field small {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.16);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.06), transparent 55%),
+                  rgba(7, 5, 23, 0.95);
+      padding: 9px 10px;
+      font-size: 0.92rem;
+      color: var(--fg);
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    select:focus,
+    input:focus {
+      border-color: var(--accent-soft);
+      box-shadow: 0 0 0 1px rgba(255,184,92,0.55);
+      transform: translateY(-1px);
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* BUTTONS */
+    button {
+      font-family: inherit;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 9px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #05030f;
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      box-shadow: 0 14px 30px rgba(255, 107, 74, 0.55);
+      transition: transform var(--transition-med), box-shadow var(--transition-med), filter var(--transition-med);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.2), transparent 55%, rgba(255,255,255,0.25));
+      opacity: 0;
+      transition: opacity 0.25s ease-out;
+      pointer-events: none;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(255, 107, 74, 0.65);
+      filter: brightness(1.03);
+    }
+    .btn:hover:not(:disabled)::after {
+      opacity: 1;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0) scale(0.99);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.8);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--fg);
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .btn.secondary:hover:not(:disabled) {
+      box-shadow: 0 16px 32px rgba(0,0,0,0.7);
+    }
+
+    .btn.inline {
+      padding-inline: 14px;
+      font-size: 0.78rem;
+    }
+
+    .btn[disabled] {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <main class="app-main">
+      <header class="app-header">
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div class="brand-text">
+            <h1>Imposter Party</h1>
+            <span>Browser Game</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Other main content here -->
+
+      <!-- Categories container - empty, to be filled by external JS -->
+      <div id="categories-container" class="card-panel" aria-live="polite" aria-label="Recent categories">
+        <div class="card-header">
+          <h2>Recent Categories</h2>
+        </div>
+        <ul id="categories-list" style="list-style:none; padding-left:0; margin:0;"></ul>
+      </div>
+    </main>
+
+    <aside class="app-aside">
+      <!-- Sidebar content here -->
+    </aside>
+  </div>
+
+  <!-- External JS file to load and render categories -->
+  <script src="categories.js" defer></script>
+</body>
+</html>
