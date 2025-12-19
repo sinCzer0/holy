@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Imposter Party – Browser Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
+      background: linear-gradient(135deg, #0d0b1d, #1a1a2e);
+      font-family: 'DM Sans', sans-serif;
+      color: #e0e0ff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Container */
+    .app-shell {
+      background: #121126;
+      border-radius: 24px;
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.7),
+        inset 0 0 60px #2a2a4a;
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: 2.5fr 1.5fr;
+      gap: 32px;
+      padding: 32px;
+      color: #cfd1ff;
+    }
+    @media (max-width: 720px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 24px;
+      }
+    }
+
+    /* Main content */
+    .app-main {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow-y: auto;
+      max-height: 85vh;
+    }
+
+    /* Sidebar */
+    .app-aside {
+      background: #1a1a3a;
+      border-radius: 20px;
+      padding: 24px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #a0a2c0;
+      box-shadow: inset 0 0 20px #222244;
+    }
+
+    /* Header */
+    header.app-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, #ff6b4a, #ffb85c, #00f5a0, #5b8dff, #ff6b4a);
+      position: relative;
+      box-shadow: 0 0 12px #ff6b4aaa;
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 10%, rgba(255,255,255,0.7), transparent 45%),
+                  radial-gradient(circle at 70% 80%, rgba(255,107,74,0.6), transparent 55%),
+                  #121126;
+    }
+    .brand-text h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      margin: 0;
+      letter-spacing: 0.1em;
+      color: #f0f0ff;
+      text-transform: uppercase;
+      user-select: none;
+    }
+    .brand-text span {
+      font-size: 0.9rem;
+      color: #888abf;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    /* Form elements */
+    label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      color: #a0a2c0;
+      margin-bottom: 6px;
+      display: block;
+      user-select: none;
+    }
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: none;
+      background: #2a2a4a;
+      color: #e0e0ff;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: inset 0 0 10px #1a1a3a;
+      transition: box-shadow 0.3s ease;
+      outline-offset: 2px;
+      outline-color: transparent;
+    }
+    select:focus, input:focus {
+      box-shadow: 0 0 12px #ffb85c;
+      outline-color: #ffb85c;
+    }
+    #playerInputs input {
+      margin-bottom: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, #ff6b4a, #ffb85c);
+      color: #121126;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 24px;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255,107,74,0.6);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(255,107,74,0.8);
+    }
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 6px 18px rgba(255,107,74,0.5);
+    }
+    .btn[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    .btn.secondary {
+      background: #2a2a4a;
+      color: #a0a2c0;
+      box-shadow: none;
+      border: 1.5px solid #444477;
+    }
+    .btn.secondary:hover:not(:disabled) {
+      background: #3a3a6a;
+      color: #ffb85c;
+      border-color: #ffb85c;
+      box-shadow: 0 0 12px #ffb85caa;
+    }
+    .btn.inline {
+      padding: 10px 18px;
+      font-size: 0.9rem;
+    }
+
+    /* Reveal text */
+    #revealText {
+      min-height: 80px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-soft);
+      margin-bottom: 12px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      user-select: none;
+    }
+    #revealText.show {
+      opacity: 1;
+    }
+
+    /* Vote options */
+    #voteOptions label {
+      display: block;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      background: #2a2a4a;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #e0e0ff;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+    #voteOptions label:hover {
+      background: #3a3a6a;
+    }
+    #voteOptions input[type="radio"] {
+      margin-right: 12px;
+      accent-color: #ffb85c;
+      cursor: pointer;
+    }
+
+    /* Score list */
+    #scoreList {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      max-height: 220px;
+      overflow-y: auto;
+      font-weight: 600;
+      font-size: 1rem;
+      user-select: none;
+    }
+    #scoreList li {
+      padding: 10px 0;
+      border-bottom: 1px solid #444477;
+    }
+
+    /* Progress bars */
+    progress {
+      width: 100%;
+      height: 14px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      appearance: none;
+      background: #2a2a4a;
+      box-shadow: inset 0 0 8px #1a1a3a;
+    }
+    progress::-webkit-progress-bar {
+      background: #2a2a4a;
+    }
+    progress::-webkit-progress-value {
+      background: #ffb85c;
+      transition: width 0.3s ease;
+    }
+
+    /* Floating emojis */
+    .floating-emoji {
+      position: fixed;
+      pointer-events: none;
+      user-select: none;
+      animation: floatUp 10s linear forwards;
+      will-change: transform, opacity;
+      opacity: 0.6;
+      z-index: 0;
+      font-size: 24px;
+      filter: drop-shadow(0 0 2px #ffb85caa);
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-150vh);
+        opacity: 0;
+      }
+    }
+
+    /* Scrollbar styling for score list */
+    #scoreList::-webkit-scrollbar {
+      width: 8px;
+    }
+    #scoreList::-webkit-scrollbar-track {
+      background: #1a1a3a;
+      border-radius: 8px;
+    }
+    #scoreList::-webkit-scrollbar-thumb {
+      background: #ffb85c;
+      border-radius: 8px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <main class="app-main" role="main" aria-label="Game main area">
+      <header class="app-header">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
+          <div class="brand-text">
+            <h1>Imposter Party</h1>
+            <span>Browser Game</span>
+          </div>
+        </div>
+      </header>
+
+      <label for="categorySelect">Select Category</label>
+      <select id="categorySelect" aria-describedby="categoryHelp"></select>
+      <small id="categoryHelp" style="color: var(--muted); margin-bottom: 12px; display: block;">Choose a category for the secret topic</small>
+
+      <form id="playerForm" aria-label="Player names form">
+        <label for="numPlayers">Number of Players</label>
+        <input type="number" id="numPlayers" min="3" max="20" value="4" aria-describedby="numPlayersHelp" />
+        <small id="numPlayersHelp" style="color: var(--muted); margin-bottom: 12px; display: block;">Enter number of players (3-20)</small>
+        <div id="playerInputs" aria-live="polite" aria-relevant="additions"></div>
+        <button type="submit" id="startBtn" class="btn" aria-live="polite">Start Game</button>
+      </form>
+
+      <div id="revealText" aria-live="assertive" role="alert"></div>
+      <button id="nextPlayerBtn" class="btn secondary" style="display:none;" aria-label="Next player reveal">Next Player</button>
+      <button id="redoBtn" class="btn secondary" style="display:none;" aria-label="Redo reveal">Redo</button>
+
+      <div id="voteOptions" style="margin-top:12px;" aria-live="polite" aria-label="Voting options"></div>
+      <button id="submitVoteBtn" class="btn" style="display:none;" aria-label="Submit vote">Submit Vote</button>
+
+      <h2>Scores</h2>
+      <ul id="scoreList" aria-live="polite" aria-label="Player scores"></ul>
+
+      <label for="revealProgress">Reveal Progress</label>
+      <progress id="revealProgress" max="100" value="0"></progress>
+
+      <label for="voteProgress">Vote Progress</label>
+      <progress id="voteProgress" max="100" value="0"></progress>
+
+      <button id="muteBtn" class="btn inline" aria-pressed="false">Mute 🔈</button>
+      <button id="changeTopicBtn" class="btn inline" style="margin-left: 8px;">Change Topic</button>
+
+      <audio id="lofi" src="https://cdn.pixabay.com/download/audio/2022/03/25/audio_1e2b5f6f6e.mp3?filename=lofi-hip-hop-ambient-11068.mp3" loop autoplay></audio>
+    </main>
+
+    <aside class="app-aside" aria-label="Game Instructions">
+      <h2>How to Play</h2>
+      <p>Enter player names, select a category, and start the game.</p>
+      <p>Players take turns viewing their secret roles and topics.</p>
+      <p>Vote to find the imposter. Scores update after each round.</p>
+    </aside>
+  </div>
+
+  <script>
+    const topics = {
+      "NBA Stars": ["LeBron James","Stephen Curry","Kawhi Leonard","Giannis Antetokounmpo","Kevin Durant","James Harden","Anthony Davis","Joel Embiid","Luka Doncic","Zion Williamson","Jayson Tatum","Damian Lillard","Trae Young","Karl-Anthony Towns","Bradley Beal","Devin Booker","Jimmy Butler","Chris Paul","Russell Westbrook","Ben Simmons","Kyrie Irving","Paul George","Klay Thompson","Draymond Green","Rudy Gobert","Donovan Mitchell","Nikola Jokic","Julius Randle","Ja Morant","DeMar DeRozan","Fred VanVleet","Bam Adebayo","Tyler Herro","Jaren Jackson Jr.","Jaylen Brown","Domantas Sabonis","CJ McCollum","Pascal Siakam","Zach LaVine","Michael Jordan","Kobe Bryant","Shaquille O'Neal","Magic Johnson","Larry Bird","Tim Duncan","Hakeem Olajuwon","Allen Iverson","Charles Barkley","Karl Malone","John Stockton","Scottie Pippen","Patrick Ewing","Derrick Rose","Lakers","Bulls","Celtics","Warriors","Heat","Spurs","Nets","Raptors"],
+      "Movies": ["The Godfather","Inception","Titanic","The Matrix","Avengers","Pulp Fiction","Forrest Gump","Gladiator","Interstellar","Parasite","Joker","The Dark Knight","Schindler's List","Fight Club","The Lord of the Rings","Harry Potter","The Lion King","Frozen","Toy Story","The Social Network","Inglourious Basterds","Whiplash","La La Land","Coco","The Shining","A Clockwork Orange","Jurassic Park","Star Wars","Guardians of the Galaxy","Black Panther","Avengers: Endgame","Mad Max: Fury Road","The Departed","The Prestige","Django Unchained","The Silence of the Lambs","Braveheart","Goodfellas","The Revenant","Once Upon a Time in Hollywood","Catch Me If You Can","No Country for Old Men","The Sixth Sense","Up","Inside Out","WALL-E","Shutter Island","12 Years a Slave"],
+      "Anime": ["Naruto","Goku","Luffy","Ichigo","One Punch Man","Sailor Moon","Edward Elric","Levi Ackerman","Light Yagami","Gon Freecss","Eren Yeager","Mikasa Ackerman","Tanjiro Kamado","Nezuko Kamado","Saitama","Koro-sensei","Gintoki Sakata","Spike Spiegel","Vash the Stampede","Yusuke Urameshi","Inuyasha","Kenshin Himura","Totoro","Natsu Dragneel","Lucy Heartfilia","Gray Fullbuster","Erza Scarlet","Shoyo Hinata","Kageyama Tobio","Shikamaru Nara","Kakashi Hatake","Madara Uchiha","Itachi Uchiha","Roronoa Zoro","Sanji","Monkey D. Garp","Kenshiro","Alphonse Elric","Roy Mustang","Sailor Venus","Sailor Jupiter","Bulma","Vegeta","Kurapika","Killua Zoldyck","Yugi Muto","JoJo Series","Naruto Series","Dragon Ball Series","One Piece Series","Bleach Series","Attack on Titan Series"],
+      "Rappers": ["Kendrick Lamar","Drake","J. Cole","Kanye West","Nicki Minaj","Eminem","Tupac","Biggie","Jay-Z","Snoop Dogg","Nas","Ice Cube","Travis Scott","Megan Thee Stallion","Lil Wayne","Cardi B","Future","Doja Cat","Lil Baby","Dr. Dre","2 Chainz","Rakim","Big Pun","LL Cool J","Q-Tip","Busta Rhymes","Missy Elliott","Method Man","Redman","Killer Mike","Juice WRLD","21 Savage","Lil Uzi Vert","Pop Smoke","Tyler, The Creator","A$AP Rocky","Jadakiss","DMX","Common","The Notorious B.I.G.","T.I.","Young Thug","Mac Miller","Wale","Logic","Chance the Rapper","Andre 3000","E-40","Schoolboy Q","Too $hort"],
+      "Elden Ring – Bosses": ["Margit","Godrick","Rennala","Rykard","Starscourge Radahn","Morgott","Malenia","Mohg","Astel","Fire Giant","Dragonlord Placidusax","Leonine Misbegotten","Commander Niall","Blaidd","Fingerslayer","Regal Ancestor Spirit"],
+      "Elden Ring – Weapons": ["Moonveil","Rivers of Blood","Blasphemous Blade","Dragon Slayer","Great Club","Grafted Blade Greatsword","Hand of Malenia","Sacred Relic Sword","Eclipse Shotel","Reduvia","Nagakiba","Knight's Halberd","Uchigatana","Godslayer's Greatsword","Sword of Night and Flame"],
+      "Apex Legends – Legends": ["Wraith","Pathfinder","Bloodhound","Gibraltar","Lifeline","Bangalore","Caustic","Mirage","Octane","Crypto","Horizon","Fuse","Valkyrie","Seer","Ash","Mad Maggie","Newcastle","Vantage","Catalyst"],
+      "Apex Legends – Weapons": ["R-301","R-99","Flatline","VK-47","Sentinel","Kraber","Peacekeeper","Mastiff","Wingman","Hemlok","Prowler","Longbow","30-30 Repeater","Havoc","Volt"],
+      "Naruto – Characters": ["Naruto","Sasuke","Sakura","Kakashi","Itachi","Shikamaru","Hinata","Gaara","Rock Lee","Neji","Jiraiya","Orochimaru","Tsunade","Madara","Obito","Minato","Kushina","Sarada","Boruto"],
+      "Naruto – Jutsu": ["Rasengan","Chidori","Shadow Clone","Amaterasu","Susanoo","Eight Gates","Flying Thunder God","Summoning Jutsu","Byakugan","Sharingan","Mangekyo Sharingan","Sage Mode","Tailed Beast Bomb","Wood Release","Ice Release","Fire Style: Fireball Jutsu"]
+    };
+
+    // DOM Elements
+    const categorySelect = document.getElementById('categorySelect');
+    const playerInputs = document.getElementById('playerInputs');
+    const startBtn = document.getElementById('startBtn');
+    const nextPlayerBtn = document.getElementById('nextPlayerBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    const voteOptions = document.getElementById('voteOptions');
+    const submitVoteBtn = document.getElementById('submitVoteBtn');
+    const scoreList = document.getElementById('scoreList');
+    const revealText = document.getElementById('revealText');
+    const revealProgress = document.getElementById('revealProgress');
+    const voteProgress = document.getElementById('voteProgress');
+    const muteBtn = document.getElementById('muteBtn');
+    const changeTopicBtn = document.getElementById('changeTopicBtn');
+    const lofiAudio = document.getElementById('lofi');
+    const numPlayersInput = document.getElementById('numPlayers');
+    const playerForm = document.getElementById('playerForm');
+
+    // Game State
+    let playerNames = [];
+    let secretTopic = '';
+    let currentCategory = '';
+    let scores = {};
+    let revealStep = 0;
+    let impostersIndexes = [];
+    let votes = [];
+    let currentVoterIndex = 0;
+    let eliminatedPlayers = new Set();
+
+    // Populate categories dropdown
+    function populateCategories() {
+      categorySelect.innerHTML = '';
+      Object.keys(topics).forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        categorySelect.appendChild(opt);
+      });
+      const customOpt = document.createElement('option');
+      customOpt.value = 'Custom';
+      customOpt.textContent = 'Custom Category...';
+      categorySelect.appendChild(customOpt);
+      categorySelect.value = Object.keys(topics)[0];
+      currentCategory = categorySelect.value;
+    }
+
+    // Create player input fields based on number of players
+    function createPlayerInputs(num) {
+      playerInputs.innerHTML = '';
+      for(let i = 1; i <= num; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = `Player ${i} Name`;
+        input.required = true;
+        playerInputs.appendChild(input);
+      }
+    }
+
+    // Assign imposters randomly
+    function assignImposters() {
+      const numImposters = 1; // You can make this configurable
+      impostersIndexes = [];
+      while(impostersIndexes.length < numImposters) {
+        const rand = Math.floor(Math.random() * playerNames.length);
+        if(!impostersIndexes.includes(rand)) impostersIndexes.push(rand);
+      }
+    }
+
+    // Pick secret topic from current category
+    function pickTopic() {
+      const list = topics[currentCategory];
+      secretTopic = list[Math.floor(Math.random() * list.length)];
+      createFloatingEmojis();
+    }
+
+    // Floating emojis background
+    function createFloatingEmojis() {
+      const emojis = {
+        "NBA Stars": "🏀",
+        "Movies": "🎬",
+        "Anime": "🌀",
+        "Rappers": "🎤",
+        "Elden Ring – Bosses": "👹",
+        "Elden Ring – Weapons": "⚔️",
+        "Apex Legends – Legends": "🛡️",
+        "Apex Legends – Weapons": "🔫",
+        "Naruto – Characters": "🥷",
+        "Naruto – Jutsu": "💨"
+      };
+      document.querySelectorAll('.floating-emoji').forEach(e => e.remove());
+      for(let i=0; i<20; i++) {
+        const span = document.createElement('span');
+        span.textContent = emojis[currentCategory] || "⭐";
+        span.className = 'floating-emoji';
+        span.style.left = Math.random()*100 + 'vw';
+        span.style.top = Math.random()*100 + 'vh';
+        span.style.fontSize = (10 + Math.random()*30) + 'px';
+        span.style.opacity = Math.random();
+        document.body.appendChild(span);
+        setTimeout(() => {
+          span.style.transform = `translateY(-150vh)`;
+          setTimeout(() => span.remove(), 10000);
+        }, Math.random()*5000);
+      }
+    }
+
+    // Show player inputs on number input change
+    numPlayersInput.addEventListener('change', () => {
+      let val = parseInt(numPlayersInput.value);
+      if(isNaN(val) || val < 3) val = 3;
+      else if(val > 20) val = 20;
+      numPlayersInput.value = val;
+      createPlayerInputs(val);
+    });
+
+    // Event: category change
+    categorySelect.addEventListener('change', e => {
+      currentCategory = e.target.value;
+      pickTopic();
+    });
+
+    // Event: start game
+    playerForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const inputs = playerInputs.querySelectorAll('input');
+      playerNames = Array.from(inputs).map(i => i.value.trim()).filter(n => n.length > 0);
+      if(playerNames.length < 3) {
+        alert('Please enter at least 3 players.');
+        return;
+      }
+      scores = {};
+      playerNames.forEach(p => scores[p] = 0);
+      assignImposters();
+      pickTopic();
+      revealStep = 0;
+      votes = [];
+      currentVoterIndex = 0;
+      eliminatedPlayers = new Set();
+      updateScoreList();
+      revealText.textContent = '';
+      voteOptions.innerHTML = '';
+      submitVoteBtn.style.display = 'none';
+      nextPlayerBtn.style.display = 'inline-flex';
+      redoBtn.style.display = 'inline-flex';
+      startBtn.disabled = true;
+      categorySelect.disabled = true;
+      playerInputs.querySelectorAll('input').forEach(i => i.disabled = true);
+      showPlayerReveal();
+    });
+
+    // Show player reveal screen with "Next up" message and fade animation
+    function showPlayerReveal() {
+      if (revealStep >= playerNames.length) {
+        revealText.textContent = 'All players have seen their roles. Start voting!';
+        nextPlayerBtn.style.display = 'none';
+        redoBtn.style.display = 'none';
+        showVoteOptions();
+        return;
+      }
+
+      const player = playerNames[revealStep];
+
+      // Show "Next up" message first
+      revealText.textContent = `Next up: ${sanitize(player)}`;
+      revealText.classList.add('show');
+
+      // Disable buttons during this phase
+      nextPlayerBtn.disabled = true;
+      redoBtn.disabled = true;
+
+      // After 1.5 seconds, reveal role and topic with fade-in
+      setTimeout(() => {
+        const isImposter = impostersIndexes.includes(revealStep);
+        revealText.innerHTML = `<strong>${sanitize(player)}</strong>, your role is: <span style="color:${isImposter ? 'var(--danger)' : 'var(--success)'}">${isImposter ? 'Imposter' : 'Crewmate'}</span><br>Secret Topic: <em>${isImposter ? '???' : sanitize(secretTopic)}</em>`;
+        revealProgress.value = ((revealStep + 1) / playerNames.length) * 100;
+
+        // Keep reveal visible
+        revealText.classList.add('show');
+
+        // After 3 seconds, hide reveal and enable buttons
+        setTimeout(() => {
+          revealText.classList.remove('show');
+          nextPlayerBtn.disabled = false;
+          redoBtn.disabled = false;
+        }, 3000);
+      }, 1500);
+    }
+
+    // Next player button
+    nextPlayerBtn.addEventListener('click', () => {
+      revealStep++;
+      showPlayerReveal();
+    });
+
+    // Redo button
+    redoBtn.addEventListener('click', () => {
+      showPlayerReveal();
+    });
+
+    // Show voting options
+    function showVoteOptions() {
+      voteOptions.innerHTML = '';
+      playerNames.forEach((p, i) => {
+        if(eliminatedPlayers.has(i)) return; // skip eliminated
+        const label = document.createElement('label');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'vote';
+        radio.value = i;
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(p));
+        voteOptions.appendChild(label);
+      });
+      submitVoteBtn.style.display = 'inline-flex';
+      voteProgress.value = 0;
+      currentVoterIndex = 0;
+      votes = [];
+      revealText.textContent = `Player ${sanitize(playerNames[currentVoterIndex])}, please vote.`;
+    }
+
+    // Submit vote button
+    submitVoteBtn.addEventListener('click', () => {
+      const selected = voteOptions.querySelector('input[name="vote"]:checked');
+      if(!selected) {
+        alert('Please select a player to vote for.');
+        return;
+      }
+      votes.push(parseInt(selected.value));
+      currentVoterIndex++;
+      voteProgress.value = (currentVoterIndex / (playerNames.length - eliminatedPlayers.size)) * 100;
+      if(currentVoterIndex >= playerNames.length - eliminatedPlayers.size) {
+        tallyVotes();
+      } else {
+        revealText.textContent = `Player ${sanitize(playerNames[currentVoterIndex])}, please vote.`;
+        voteOptions.querySelectorAll('input').forEach(i => i.checked = false);
+      }
+    });
+
+    // Tally votes and update scores based on majority vote and reward voters
+    function tallyVotes() {
+      submitVoteBtn.style.display = 'none';
+      const voteCounts = {};
+      votes.forEach(v => {
+        voteCounts[v] = (voteCounts[v] || 0) + 1;
+      });
+
+      // Find max votes
+      let maxVotes = 0;
+      let eliminated = [];
+      for (const [playerIndex, count] of Object.entries(voteCounts)) {
+        if (count > maxVotes) {
+          maxVotes = count;
+          eliminated = [parseInt(playerIndex)];
+        } else if (count === maxVotes) {
+          eliminated.push(parseInt(playerIndex));
+        }
+      }
+
+      const totalVotes = votes.length;
+      const majority = Math.floor(totalVotes / 2) + 1;
+      let imposterCaught = false;
+
+      // Check if majority voted on an imposter
+      eliminated.forEach(i => {
+        if (impostersIndexes.includes(i) && voteCounts[i] >= majority) {
+          imposterCaught = true;
+        }
+      });
+
+      // Update scores
+      eliminated.forEach(i => {
+        if (impostersIndexes.includes(i)) {
+          if (imposterCaught) {
+            // Imposter eliminated by majority vote loses 1 point
+            scores[playerNames[i]] = (scores[playerNames[i]] || 0) - 1;
+          }
+          // If imposter not caught by majority, no penalty here
+        } else {
+          // Innocent eliminated loses 1 point
+          scores[playerNames[i]] = (scores[playerNames[i]] || 0) - 1;
+        }
+      });
+
+      // Reward voters who voted for imposter if caught by majority
+      if (imposterCaught) {
+        votes.forEach((votedIndex, voterIndex) => {
+          if (eliminated.includes(votedIndex)) {
+            const voterName = playerNames[voterIndex];
+            scores[voterName] = (scores[voterName] || 0) + 1;
+          }
+        });
+      }
+
+      // Mark eliminated players
+      eliminated.forEach(i => eliminatedPlayers.add(i));
+
+      updateScoreList();
+
+      revealText.textContent = `Player(s) eliminated: ${eliminated.map(i => sanitize(playerNames[i])).join(', ')}. ${imposterCaught ? 'Imposter caught! Voters rewarded.' : 'Imposter escaped!'}`;
+
+      // Reset for next round or end game logic here
+      startBtn.disabled = false;
+      categorySelect.disabled = false;
+      playerInputs.querySelectorAll('input').forEach(i => i.disabled = false);
+      nextPlayerBtn.style.display = 'none';
+      redoBtn.style.display = 'none';
+      voteOptions.innerHTML = '';
+    }
+
+    // Update score list UI
+    function updateScoreList() {
+      scoreList.innerHTML = '';
+      Object.entries(scores).forEach(([player, score]) => {
+        const li = document.createElement('li');
+        li.textContent = `${player}: ${score}`;
+        scoreList.appendChild(li);
+      });
+    }
+
+    // Sanitize text for HTML
+    function sanitize(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Mute/unmute audio
+    muteBtn.addEventListener('click', () => {
+      lofiAudio.muted = !lofiAudio.muted;
+      muteBtn.textContent = lofiAudio.muted ? "Unmute 🔇" : "Mute 🔈";
+      muteBtn.setAttribute('aria-pressed', lofiAudio.muted.toString());
+    });
+
+    // Change topic button
+    changeTopicBtn.addEventListener('click', () => {
+      pickTopic();
+      revealText.textContent = 'Topic changed!';
+    });
+
+    // Initialize
+    populateCategories();
+    pickTopic();
+    createPlayerInputs(parseInt(numPlayersInput.value) || 4);
+  </script>
+</body>
+</html>
