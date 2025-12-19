@@ -1,158 +1,146 @@
-// categories.js
-
-// All categories data as a JavaScript object
-const categoriesData = {
-  "NBA Stars": [
-    "LeBron James","Stephen Curry","Kawhi Leonard","Giannis Antetokounmpo","Kevin Durant",
-    "James Harden","Anthony Davis","Joel Embiid","Luka Doncic","Zion Williamson",
-    "Jayson Tatum","Damian Lillard","Trae Young","Karl-Anthony Towns","Bradley Beal",
-    "Devin Booker","Jimmy Butler","Chris Paul","Russell Westbrook","Ben Simmons",
-    "Kyrie Irving","Paul George","Klay Thompson","Draymond Green","Rudy Gobert",
-    "Donovan Mitchell","Nikola Jokic","Julius Randle","Ja Morant","DeMar DeRozan",
-    "Fred VanVleet","Bam Adebayo","Tyler Herro","Jaren Jackson Jr.","Jaylen Brown",
-    "Domantas Sabonis","CJ McCollum","Pascal Siakam","Zach LaVine",
-    "Michael Jordan","Kobe Bryant","Shaquille O'Neal","Magic Johnson","Larry Bird",
-    "Tim Duncan","Hakeem Olajuwon","Allen Iverson","Charles Barkley","Karl Malone",
-    "John Stockton","Scottie Pippen","Patrick Ewing","Derrick Rose",
-    "Lakers","Bulls","Celtics","Warriors","Heat","Spurs","Nets","Raptors"
-  ],
-
-  "Movies": [
-    "The Godfather","Inception","Titanic","The Matrix","Avengers","Pulp Fiction",
-    "Forrest Gump","Gladiator","Interstellar","Parasite","Joker","The Dark Knight",
-    "Schindler's List","Fight Club","The Lord of the Rings","Harry Potter",
-    "The Lion King","Frozen","Toy Story","The Social Network","Inglourious Basterds",
-    "Whiplash","La La Land","Coco","The Shining","A Clockwork Orange","Jurassic Park",
-    "Star Wars","Guardians of the Galaxy","Black Panther","Avengers: Endgame",
-    "Mad Max: Fury Road","The Departed","The Prestige","Django Unchained",
-    "The Silence of the Lambs","Braveheart","Goodfellas","The Revenant",
-    "Once Upon a Time in Hollywood","Catch Me If You Can","No Country for Old Men",
-    "The Sixth Sense","Up","Inside Out","WALL-E","Shutter Island","12 Years a Slave"
-  ],
-
-  "Video Games": [
-    "Mario","Link","Lara Croft","Kratos","Samus","Geralt","Master Chief","Sonic",
-    "Pac-Man","Mega Man","Solid Snake","Cloud Strife","Leon Kennedy","Ezio Auditore",
-    "Doom Slayer","Arthur Morgan","Spyro","Crash Bandicoot","Kirby","Donkey Kong",
-    "Ryu","Chun-Li","Sub-Zero","Scorpion",
-    "Master Sword","Energy Sword","Buster Sword","Keyblade","Portal Gun","Gravity Gun",
-    "Hidden Blade","Masamune","Gunblade","Lightsaber",
-    "Final Fantasy Series","Resident Evil Series","Halo Series","Legend of Zelda Series"
-  ],
-
-  "Anime": [
-    "Naruto","Goku","Luffy","Ichigo","One Punch Man","Sailor Moon","Edward Elric",
-    "Levi Ackerman","Light Yagami","Gon Freecss","Eren Yeager","Mikasa Ackerman",
-    "Tanjiro Kamado","Nezuko Kamado","Saitama","Koro-sensei","Gintoki Sakata",
-    "Spike Spiegel","Vash the Stampede","Yusuke Urameshi","Inuyasha","Kenshin Himura",
-    "Totoro","Natsu Dragneel","Lucy Heartfilia","Gray Fullbuster","Erza Scarlet",
-    "Shoyo Hinata","Kageyama Tobio","Shikamaru Nara","Kakashi Hatake","Madara Uchiha",
-    "Itachi Uchiha","Roronoa Zoro","Sanji","Monkey D. Garp","Kenshiro",
-    "Alphonse Elric","Roy Mustang","Bulma","Vegeta","Kurapika","Killua Zoldyck",
-    "Yugi Muto",
-    "Naruto Series","Dragon Ball Series","One Piece Series","Bleach Series","Attack on Titan Series"
-  ],
-
-  "Rappers": [
-    "Kendrick Lamar","Drake","J. Cole","Kanye West","Nicki Minaj","Eminem","Tupac",
-    "Biggie","Jay-Z","Snoop Dogg","Nas","Ice Cube","Travis Scott","Megan Thee Stallion",
-    "Lil Wayne","Cardi B","Future","Doja Cat","Lil Baby","Dr. Dre","2 Chainz","Rakim",
-    "Big Pun","LL Cool J","Q-Tip","Busta Rhymes","Missy Elliott","Method Man","Redman",
-    "Killer Mike","Juice WRLD","21 Savage","Lil Uzi Vert","Pop Smoke",
-    "Tyler, The Creator","A$AP Rocky","Jadakiss","DMX","Common",
-    "The Notorious B.I.G.","T.I.","Young Thug","Mac Miller","Wale","Logic",
-    "Chance the Rapper","Andre 3000","E-40","Schoolboy Q","Too $hort"
-  ],
-
-  "Elden Ring – Bosses": [
-    "Margit, the Fell Omen","Godrick the Grafted","Rennala, Queen of the Full Moon",
-    "Starscourge Radahn","Rykard, Lord of Blasphemy","Morgott, the Omen King",
-    "Fire Giant","Maliketh, the Black Blade","Godfrey, First Elden Lord",
-    "Hoarah Loux","Radagon of the Golden Order","Elden Beast",
-    "Malenia, Blade of Miquella","Mohg, Lord of Blood",
-    "Dragonlord Placidusax","Lichdragon Fortissax",
-    "Astel, Naturalborn of the Void","Regal Ancestor Spirit"
-  ],
-
-  "Elden Ring – Weapons": [
-    "Rivers of Blood","Moonveil","Dark Moon Greatsword","Blasphemous Blade",
-    "Hand of Malenia","Maliketh’s Black Blade","Starscourge Greatsword",
-    "Sacred Relic Sword","Bloodhound’s Fang","Uchigatana","Nagakiba",
-    "Sword of Night and Flame","Reduvia","Eleonora’s Poleblade",
-    "Claymore","Zweihander","Giant-Crusher","Mohgwyn’s Sacred Spear"
-  ],
-
-  "Apex Legends – Legends": [
-    "Wraith","Bloodhound","Gibraltar","Lifeline","Pathfinder","Bangalore","Mirage",
-    "Caustic","Octane","Wattson","Crypto","Revenant","Loba","Rampart","Horizon",
-    "Fuse","Valkyrie","Seer","Ash","Mad Maggie","Newcastle","Vantage",
-    "Catalyst","Ballistic","Conduit"
-  ],
-
-  "Apex Legends – Weapons": [
-    "R-301 Carbine","Flatline","Hemlok","Havoc Rifle","R-99","CAR SMG","Volt",
-    "Prowler Burst PDW","Alternator","Spitfire","Devotion","L-STAR","Rampage",
-    "Peacekeeper","Mastiff","EVA-8","Mozambique","Wingman","RE-45","P2020",
-    "Kraber","Sentinel","Longbow DMR","Charge Rifle","Triple Take","Bocek Bow"
-  ],
-
-  "Naruto – Characters": [
-    "Naruto Uzumaki","Sasuke Uchiha","Sakura Haruno","Kakashi Hatake",
-    "Itachi Uchiha","Madara Uchiha","Obito Uchiha","Minato Namikaze",
-    "Jiraiya","Tsunade","Orochimaru","Hinata Hyuga","Neji Hyuga",
-    "Rock Lee","Might Guy","Gaara","Pain (Nagato)","Konan","Kisame Hoshigaki"
-  ],
-
-  "Naruto – Jutsu": [
-    "Rasengan","Rasenshuriken","Chidori","Amaterasu","Tsukuyomi","Susanoo",
-    "Shadow Clone Jutsu","Flying Raijin","Reanimation Jutsu","Eight Gates",
-    "Sharingan","Mangekyō Sharingan","Wood Release","Fireball Jutsu",
-    "Planetary Devastation","Six Paths Sage Mode"
-  ]
+// =======================
+// All Topics (Expanded)
+// =======================
+const topics = {
+  "NBA Stars": ["LeBron James","Stephen Curry","Kawhi Leonard","Giannis Antetokounmpo","Kevin Durant","James Harden","Anthony Davis","Joel Embiid","Luka Doncic","Zion Williamson","Jayson Tatum","Damian Lillard","Trae Young","Karl-Anthony Towns","Bradley Beal","Devin Booker","Jimmy Butler","Chris Paul","Russell Westbrook","Ben Simmons","Kyrie Irving","Paul George","Klay Thompson","Draymond Green","Rudy Gobert","Donovan Mitchell","Nikola Jokic","Julius Randle","Ja Morant","DeMar DeRozan","Fred VanVleet","Bam Adebayo","Tyler Herro","Jaren Jackson Jr.","Jaylen Brown","Domantas Sabonis","CJ McCollum","Pascal Siakam","Zach LaVine","Michael Jordan","Kobe Bryant","Shaquille O'Neal","Magic Johnson","Larry Bird","Tim Duncan","Hakeem Olajuwon","Allen Iverson","Charles Barkley","Karl Malone","John Stockton","Scottie Pippen","Patrick Ewing","Derrick Rose","Lakers","Bulls","Celtics","Warriors","Heat","Spurs","Nets","Raptors"],
+  "Movies": ["The Godfather","Inception","Titanic","The Matrix","Avengers","Pulp Fiction","Forrest Gump","Gladiator","Interstellar","Parasite","Joker","The Dark Knight","Schindler's List","Fight Club","The Lord of the Rings","Harry Potter","The Lion King","Frozen","Toy Story","The Social Network","Inglourious Basterds","Whiplash","La La Land","Coco","The Shining","A Clockwork Orange","Jurassic Park","Star Wars","Guardians of the Galaxy","Black Panther","Avengers: Endgame","Mad Max: Fury Road","The Departed","The Prestige","Django Unchained","The Silence of the Lambs","Braveheart","Goodfellas","The Revenant","Once Upon a Time in Hollywood","Catch Me If You Can","No Country for Old Men","The Sixth Sense","Up","Inside Out","WALL-E","Shutter Island","12 Years a Slave"],
+  "Anime": ["Naruto","Goku","Luffy","Ichigo","One Punch Man","Sailor Moon","Edward Elric","Levi Ackerman","Light Yagami","Gon Freecss","Eren Yeager","Mikasa Ackerman","Tanjiro Kamado","Nezuko Kamado","Saitama","Koro-sensei","Gintoki Sakata","Spike Spiegel","Vash the Stampede","Yusuke Urameshi","Inuyasha","Kenshin Himura","Totoro","Natsu Dragneel","Lucy Heartfilia","Gray Fullbuster","Erza Scarlet","Shoyo Hinata","Kageyama Tobio","Shikamaru Nara","Kakashi Hatake","Madara Uchiha","Itachi Uchiha","Roronoa Zoro","Sanji","Monkey D. Garp","Kenshiro","Alphonse Elric","Roy Mustang","Sailor Venus","Sailor Jupiter","Bulma","Vegeta","Kurapika","Killua Zoldyck","Yugi Muto","JoJo Series","Naruto Series","Dragon Ball Series","One Piece Series","Bleach Series","Attack on Titan Series"],
+  "Rappers": ["Kendrick Lamar","Drake","J. Cole","Kanye West","Nicki Minaj","Eminem","Tupac","Biggie","Jay-Z","Snoop Dogg","Nas","Ice Cube","Travis Scott","Megan Thee Stallion","Lil Wayne","Cardi B","Future","Doja Cat","Lil Baby","Dr. Dre","2 Chainz","Rakim","Big Pun","LL Cool J","Q-Tip","Busta Rhymes","Missy Elliott","Method Man","Redman","Killer Mike","Juice WRLD","21 Savage","Lil Uzi Vert","Pop Smoke","Tyler, The Creator","A$AP Rocky","Jadakiss","DMX","Common","The Notorious B.I.G.","T.I.","Young Thug","Mac Miller","Wale","Logic","Chance the Rapper","Andre 3000","E-40","Schoolboy Q","Too $hort"],
+  "Elden Ring – Bosses": ["Margit","Godrick","Rennala","Rykard","Starscourge Radahn","Morgott","Malenia","Mohg","Astel","Fire Giant","Dragonlord Placidusax","Leonine Misbegotten","Commander Niall","Blaidd","Fingerslayer","Regal Ancestor Spirit"],
+  "Elden Ring – Weapons": ["Moonveil","Rivers of Blood","Blasphemous Blade","Dragon Slayer","Great Club","Grafted Blade Greatsword","Hand of Malenia","Sacred Relic Sword","Eclipse Shotel","Reduvia","Nagakiba","Knight's Halberd","Uchigatana","Godslayer's Greatsword","Sword of Night and Flame"],
+  "Apex Legends – Legends": ["Wraith","Pathfinder","Bloodhound","Gibraltar","Lifeline","Bangalore","Caustic","Mirage","Octane","Crypto","Horizon","Fuse","Valkyrie","Seer","Ash","Mad Maggie","Newcastle","Vantage","Catalyst"],
+  "Apex Legends – Weapons": ["R-301","R-99","Flatline","VK-47","Sentinel","Kraber","Peacekeeper","Mastiff","Wingman","Hemlok","Prowler","Longbow","30-30 Repeater","Havoc","Volt"],
+  "Naruto – Characters": ["Naruto","Sasuke","Sakura","Kakashi","Itachi","Shikamaru","Hinata","Gaara","Rock Lee","Neji","Jiraiya","Orochimaru","Tsunade","Madara","Obito","Minato","Kushina","Sarada","Boruto"],
+  "Naruto – Jutsu": ["Rasengan","Chidori","Shadow Clone","Amaterasu","Susanoo","Eight Gates","Flying Thunder God","Summoning Jutsu","Byakugan","Sharingan","Mangekyo Sharingan","Sage Mode","Tailed Beast Bomb","Wood Release","Ice Release","Fire Style: Fireball Jutsu"]
 };
 
-// Function to render all categories and their items
-function renderCategories() {
-  const container = document.getElementById('categories-container');
-  container.innerHTML = ''; // Clear existing content
+document.addEventListener('DOMContentLoaded', () => {
+  // -------------------------
+  // DOM Elements
+  // -------------------------
+  const categorySelect = document.getElementById('categorySelect');
+  const playerInputs = document.getElementById('playerInputs');
+  const startBtn = document.getElementById('startBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const playerForm = document.getElementById('playerForm');
+  const revealText = document.getElementById('revealText');
+  const nextPlayerBtn = document.getElementById('nextPlayerBtn');
+  const redoBtn = document.getElementById('redoBtn');
+  const voteOptions = document.getElementById('voteOptions');
+  const submitVoteBtn = document.getElementById('submitVoteBtn');
+  const scoreList = document.getElementById('scoreList');
+  const revealProgress = document.getElementById('revealProgress');
+  const voteProgress = document.getElementById('voteProgress');
+  const lofiAudio = document.getElementById('lofi');
+  const muteBtn = document.getElementById('muteBtn');
+  const changeTopicBtn = document.getElementById('changeTopicBtn');
 
-  // For each category, create a card panel with header and list
-  for (const [categoryName, items] of Object.entries(categoriesData)) {
-    // Create card panel div
-    const cardPanel = document.createElement('div');
-    cardPanel.className = 'card-panel';
+  // -------------------------
+  // Game State
+  // -------------------------
+  let playerNames = [];
+  let secretTopic = '';
+  let currentCategory = '';
+  let scores = {};
+  let revealStep = 0;
+  let impostersIndexes = [];
+  let votes = [];
+  let currentVoterIndex = 0;
+  let eliminatedPlayers = new Set();
 
-    // Create header
-    const header = document.createElement('div');
-    header.className = 'card-header';
-
-    const h2 = document.createElement('h2');
-    h2.textContent = categoryName;
-
-    header.appendChild(h2);
-    cardPanel.appendChild(header);
-
-    // Create list of items
-    const ul = document.createElement('ul');
-    ul.style.listStyle = 'none';
-    ul.style.paddingLeft = '0';
-    ul.style.margin = '0';
-    ul.style.maxHeight = '200px'; // Optional: limit height with scroll
-    ul.style.overflowY = 'auto';
-
-    items.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      li.style.padding = '4px 0';
-      ul.appendChild(li);
+  // -------------------------
+  // Populate Categories
+  // -------------------------
+  function populateCategories() {
+    categorySelect.innerHTML = '';
+    Object.keys(topics).forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
     });
-
-    cardPanel.appendChild(ul);
-
-    // Append card panel to container
-    container.appendChild(cardPanel);
+    const customOpt = document.createElement('option');
+    customOpt.value = 'Custom';
+    customOpt.textContent = 'Custom Category...';
+    categorySelect.appendChild(customOpt);
   }
-}
 
-// Run renderCategories when DOM is ready
-window.addEventListener('DOMContentLoaded', renderCategories);
+  // -------------------------
+  // Helper Functions
+  // -------------------------
+  function sanitize(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function showScreen(screen) {
+    // Your existing screen logic here...
+  }
+
+  function assignImposters() {
+    const numImposters = 1; // or get from input
+    impostersIndexes = [];
+    while (impostersIndexes.length < numImposters) {
+      const rand = Math.floor(Math.random() * playerNames.length);
+      if (!impostersIndexes.includes(rand)) impostersIndexes.push(rand);
+    }
+  }
+
+  function pickTopic() {
+    const list = topics[currentCategory];
+    secretTopic = list[Math.floor(Math.random() * list.length)];
+    createFloatingEmojis();
+  }
+
+  // -------------------------
+  // Floating Emoji Background
+  // -------------------------
+  function createFloatingEmojis() {
+    const emojis = {
+      "NBA Stars": "🏀",
+      "Movies": "🎬",
+      "Anime": "🌀",
+      "Rappers": "🎤",
+      "Elden Ring – Bosses": "👹",
+      "Elden Ring – Weapons": "⚔️",
+      "Apex Legends – Legends": "🛡️",
+      "Apex Legends – Weapons": "🔫",
+      "Naruto – Characters": "🥷",
+      "Naruto – Jutsu": "💨"
+    };
+    const body = document.body;
+    // remove previous
+    document.querySelectorAll('.floating-emoji').forEach(e => e.remove());
+    for (let i = 0; i < 20; i++) {
+      const span = document.createElement('span');
+      span.textContent = emojis[currentCategory] || "⭐";
+      span.className = 'floating-emoji';
+      span.style.position = 'fixed';
+      span.style.left = Math.random()*100 + 'vw';
+      span.style.top = Math.random()*100 + 'vh';
+      span.style.fontSize = (10 + Math.random()*30) + 'px';
+      span.style.opacity = Math.random();
+      span.style.transition = 'transform 10s linear';
+      body.appendChild(span);
+      setTimeout(() => {
+        span.style.transform = `translateY(-150vh)`;
+        setTimeout(() => span.remove(), 10000);
+      }, Math.random()*5000);
+    }
+  }
+
+  // -------------------------
+  // Audio Controls
+  // -------------------------
+  muteBtn.addEventListener('click', () => {
+    lofiAudio.muted = !lofiAudio.muted;
+    muteBtn.textContent = lofiAudio.muted ? "Unmute 🔇" : "Mute 🔈";
+  });
+
+  // -------------------------
+  // Initialize
+  // -------------------------
+  populateCategories();
+  // resetGame() here if you have one
+});
